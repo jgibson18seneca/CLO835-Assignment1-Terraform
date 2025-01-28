@@ -1,18 +1,7 @@
-
-
-#----------------------------------------------------------
-# ACS730 - Week 3 - Terraform Introduction
-#
-# Build EC2 Instances
-#
-#----------------------------------------------------------
-
-#  Define the provider
 provider "aws" {
   region = "us-east-1"
 }
 
-# Data source for AMI id
 data "aws_ami" "latest_amazon_linux" {
   owners      = ["amazon"]
   most_recent = true
@@ -22,18 +11,15 @@ data "aws_ami" "latest_amazon_linux" {
   }
 }
 
-
-# Data source for availability zones in us-east-1
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
-# Data block to retrieve the default VPC id
 data "aws_vpc" "default" {
   default = true
 }
 
-# Define tags locally
+# Local tags
 locals {
   default_tags = merge(module.globalvars.default_tags, { "env" = var.env })
   prefix       = module.globalvars.prefix
@@ -45,7 +31,6 @@ module "globalvars" {
   source = "../../modules/globalvars"
 }
 
-# Reference subnet provisioned by 01-Networking 
 resource "aws_instance" "my_amazon" {
   ami                         = data.aws_ami.latest_amazon_linux.id
   instance_type               = lookup(var.instance_type, var.env)
