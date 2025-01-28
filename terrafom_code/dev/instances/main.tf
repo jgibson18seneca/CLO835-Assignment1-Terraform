@@ -49,14 +49,11 @@ resource "aws_instance" "my_amazon" {
   )
 }
 
-
-# Adding SSH key to Amazon EC2
 resource "aws_key_pair" "my_key" {
   key_name   = local.name_prefix
   public_key = file("${local.name_prefix}.pub")
 }
 
-# Security Group
 resource "aws_security_group" "my_sg" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
