@@ -1,7 +1,7 @@
 # Default tags
 output "default_tags" {
   value = {
-    "Owner" = "Dockerintro"
+    "Owner" = "JGibson"
     "App"   = "Web"
     "Project" = "CLO835"
   }
@@ -9,5 +9,5 @@ output "default_tags" {
 
 # Prefix to identify resources
 output "prefix" {
-  value     = "week1"
+  value     = "asg1"
 }
