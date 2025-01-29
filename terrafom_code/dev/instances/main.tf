@@ -55,7 +55,7 @@ resource "aws_key_pair" "my_key" {
 }
 
 resource "aws_security_group" "my_sg" {
-  name        = "allow_ssh"
+  name        = "allow_ssh_http"
   description = "Allow SSH and HTTP inbound traffic"
   vpc_id      = data.aws_vpc.default.id
 
