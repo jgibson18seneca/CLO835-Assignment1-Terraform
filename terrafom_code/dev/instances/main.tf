@@ -56,13 +56,22 @@ resource "aws_key_pair" "my_key" {
 
 resource "aws_security_group" "my_sg" {
   name        = "allow_ssh"
-  description = "Allow SSH inbound traffic"
+  description = "Allow SSH and HTTP inbound traffic"
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description      = "SSH from everywhere"
     from_port        = 22
     to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  ingress {
+    description      = "HTTP from everywhere"
+    from_port        = 80
+    to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -91,4 +100,14 @@ resource "aws_eip" "static_eip" {
       "Name" = "${local.name_prefix}-eip"
     }
   )
+}
+
+# ECR
+resource "aws_ecr_repository" "my_ecr" {
+  name                 = "jg-asg1-ECR"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
