@@ -111,3 +111,5 @@ resource "aws_ecr_repository" "my_ecr" {
     scan_on_push = true
   }
 }
+
+
