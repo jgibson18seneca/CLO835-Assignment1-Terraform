@@ -170,7 +170,7 @@ resource "aws_iam_role" "ec2_role" {
 # Attach policy to the role
 resource "aws_iam_role_policy_attachment" "attach_policy" {
   role = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.my_policy.arn
+  policy_arn = aws_iam_policy.policy.arn
 }
 
 # Create an instance profile
