@@ -32,11 +32,12 @@ module "globalvars" {
 }
 
 resource "aws_instance" "my_amazon" {
-  ami                         = data.aws_ami.latest_amazon_linux.id
-  instance_type               = lookup(var.instance_type, var.env)
-  key_name                    = aws_key_pair.my_key.key_name
-  vpc_security_group_ids             = [aws_security_group.my_sg.id]
-  associate_public_ip_address = false
+  ami                          = data.aws_ami.latest_amazon_linux.id
+  instance_type                = lookup(var.instance_type, var.env)
+  key_name                     = aws_key_pair.my_key.key_name
+  vpc_security_group_ids       = [aws_security_group.my_sg.id]
+  iam_instance_profile         = aws_iam_instance_profile.ec2_profile.name
+  associate_public_ip_address  = false
   user_data = file("${path.module}/install_docker.sh")
 
   lifecycle {
@@ -140,9 +141,40 @@ resource "aws_iam_policy" "policy" {
           "ecr:DeleteRepositoryPolicy",
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = [aws_ecr_repository.my_ecr.arn]
+        # Resource = "*"
       },
     ]
   })
 }
 
+# Create IAM role
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2-iam-role"
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+  EOF
+}
+
+# Attach policy to the role
+resource "aws_iam_role_policy_attachment" "attach_policy" {
+  role = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.my_policy.arn
+}
+
+# Create an instance profile
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "my-ec2-profile"
+  role = aws_iam_role.ec2_role.name
+}
