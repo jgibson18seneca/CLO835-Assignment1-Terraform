@@ -113,4 +113,36 @@ resource "aws_ecr_repository" "my_ecr" {
   }
 }
 
+# Create IAM Policy
+resource "aws_iam_policy" "policy" {
+  name        = "ec2_ecr_policy"
+  path        = "/"
+  description = "Policy to allow priveleges for EC2 instance created in Terraform"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:DescribeRepositories",
+          "ecr:GetRepositoryPolicy",
+          "ecr:ListImages",
+          "ecr:DeleteRepository",
+          "ecr:BatchDeleteImage",
+          "ecr:SetRepositoryPolicy",
+          "ecr:DeleteRepositoryPolicy",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
 
