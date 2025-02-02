@@ -3,6 +3,7 @@
 *.pem
 *.key
 *.pub
+*asg1-dev*
 
 # Ignore terraform files
 
