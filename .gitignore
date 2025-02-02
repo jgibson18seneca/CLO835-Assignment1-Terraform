@@ -1,0 +1,10 @@
+# Ignore SSH
+
+*.pem
+*.key
+*.pub
+
+# Ignore terraform files
+
+*.terraform*
+*.tfstate*
