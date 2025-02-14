@@ -3,7 +3,7 @@
 Create SSH Key Pair for EC2 Instance
 
 ```
-ssh-keygen -t rsa -f assgn1-dev
+ssh-keygen -t rsa -f asgn1-dev
 ```
 
 Terraform actions to create Infrastructure
